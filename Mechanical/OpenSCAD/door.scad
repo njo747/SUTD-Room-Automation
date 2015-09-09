@@ -81,10 +81,10 @@ module knob_delay_case(height=14)
 		union()
 		{
 			cylinder(r=27,h=height);
-			translate([0,-5,0]) linear_extrude(2) hull()
+			linear_extrude(2) hull()
 			{
-				square([60,60],center=true);
-				for(i=[-1,1]) translate([25*i,30,0]) circle(r=5);
+				square([60,55],center=true);
+				for(i=[-1,1]) translate([25*i,27.5,0]) circle(r=5);
 			}
 			translate([0,0,9.5]) difference()
 			{
@@ -124,8 +124,12 @@ module knob_delay_case_cap()
 	translate([0,8,0]) cylinder(r=10,h=20,center=true);
 	translate([0,-11,0]) cube([20,40,10],center=true);
 }
-rotate([0,0,45]) translate([-29,0,-1.5]) gear(6,6,4,3);
-translate([0,0,-2]) difference()
+rotate([0,0,60]) translate([-33,0,-1.5])
+{
+	gear(6,10,4,0);
+	cylinder(r=6,h=5);
+}
+% translate([0,0,-1.6]) difference()
 {
 	union()
 	{
