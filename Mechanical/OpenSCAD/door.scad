@@ -106,7 +106,7 @@ module knob_delay_case_cap()
 	difference()
 	{
 		cylinder(r=29,h=10);
-		import("screw_thread.stl",convexity=3);
+		mirror([0,1,0]) import("screw_thread.stl",convexity=3);
 		cylinder(r=27.5,h=25,center=true);
 	}
 	translate([0,0,9]) difference()
@@ -187,8 +187,9 @@ module servo_gear(test=false)
 }
 
 
-translate([-30,0,10]) mirror([0,0,1]) knob_delay_case_cap();
-translate([30,0,0]) knob_delay_case();
+translate([0,0,10])
+mirror([0,0,1]) knob_delay_case_cap();
+//translate([30,0,0]) knob_delay_case();
 //knob_wheel();
 //knob_delay();
 
