@@ -7,6 +7,7 @@ $fn=100;
 //use <parametric_involute_gear_v5.0.scad>
 use <publicDomainGearV1.1.scad>
 
+//use <screw_thread.scad>
 use <servo.scad>
 
 module door_cap_frame(padding=5)
@@ -85,18 +86,35 @@ module knob_delay()
 	translate([22.5,0,2.5]) cube([3,3,5],center=true);
 	difference()
 	{
-		cylinder(r=25,h=5); cylinder(r=23.75,h=15,center=true);
+		cylinder(r=25,h=5); cylinder(r=24,h=15,center=true);
 	}
 }
 
-gear1_teeth = 16;
-gear2_teeth = 10;
-axis_angle = 90;
-outside_circular_pitch=800;
-outside_pitch_radius1 = gear1_teeth * outside_circular_pitch / 360;
-outside_pitch_radius2 = gear2_teeth * outside_circular_pitch / 360;
-pitch_apex1 = outside_pitch_radius2 * sin (axis_angle) + (outside_pitch_radius2 * cos (axis_angle) + outside_pitch_radius1) / tan (axis_angle);
-cone_distance = sqrt (pow (pitch_apex1, 2) + pow (outside_pitch_radius1, 2));
+module knob_delay_case(height=12.5)
+{
+	difference()
+	{
+		union(){ cylinder(r=27,h=height); translate([0,0,5]) import("screw_thread.stl",convexity=3); }
+		translate([0,0,1]) cylinder(r=25.5,h=height);
+		translate([0,0,height]) cylinder(r=30,h=5);
+		cylinder(r=23.5,h=5,center=true);
+	}
+}
+
+module knob_delay_case_cap()
+{
+	difference()
+	{
+		cylinder(r=29,h=10);
+		import("screw_thread.stl",convexity=3);
+		cylinder(r=27.5,h=25,center=true);
+	}
+	translate([0,0,9]) difference()
+	{
+		cylinder(r=29,h=1);
+		cylinder(r=22.5,h=3,center=true);
+	}
+}
 
 /*
 module knob_gear(test=false)
@@ -149,7 +167,7 @@ module servo_gear(test=false)
 }
 
 // translate([0,0,2]) gear(6,6,4,3);
-translate([-45,30,1.5]) difference()
+* translate([-30,0,1.5]) difference()
 {
 	union()
 	{
@@ -159,8 +177,7 @@ translate([-45,30,1.5]) difference()
 	cylinder(r=16.5,h=10,center=true);
 	for(i=[1,3,5,7]) rotate([0,0,i*45]) translate([20,0,0]) cylinder(r=1,h=10,center=true);
 }
-//translate([0,0,8.75]) knob_wheel();
-translate([45,30,0]) knob_delay();
+
 * translate([0,0,1.05]) difference()
 {
 	cylinder(r=25,h=2.5);
@@ -169,12 +186,11 @@ translate([45,30,0]) knob_delay();
 	for(i=[1,3,5,7]) rotate([0,0,i*45]) translate([20,0,0]) cylinder(r=1,h=10,center=true);
 }
 
-translate([0,0,0]) difference()
-{
-	cylinder(r=27,h=13.5);
-	translate([0,0,1]) cylinder(r=25.5,h=20);
-	cylinder(r=23.5,h=5,center=true);
-}
+
+translate([-30,0,10]) mirror([0,0,1]) knob_delay_case_cap();
+translate([30,0,0]) knob_delay_case();
+//knob_wheel();
+//knob_delay();
 
 //door_cap_frame();
 
