@@ -1,13 +1,12 @@
 $fn=100;
 
 // takes forever to render so I replaced them with the rendered STLs
-// If you want the library, go to http://www.thingiverse.com/thing:3575
-// The file I used is here: http://www.thingiverse.com/download:10581
-// uncomment the line below and the 2 bevel_gear() lines later
-//use <parametric_involute_gear_v5.0.scad>
-use <publicDomainGearV1.1.scad>
-
 //use <screw_thread.scad>
+use <involute_gears.scad>
+use <worm_gear.scad>
+
+gear_cp = 360;
+
 use <servo.scad>
 
 module door_cap_frame(padding=5)
@@ -74,6 +73,17 @@ module knob_delay()
 	}
 }
 
+module knob_final()
+{
+	difference()
+	{
+		cylinder(r=25,h=2.5);
+		cylinder(r=16.5,h=10,center=true);
+		translate([0,21.5,0]) cylinder(r=1.5,h=6,center=true);
+		for(i=[1,3,5,7]) rotate([0,0,i*45]) translate([20,0,0]) cylinder(r=1,h=10,center=true);
+	}
+}
+
 module knob_delay_case(height=14)
 {
 	difference()
@@ -86,6 +96,7 @@ module knob_delay_case(height=14)
 				square([60,55],center=true);
 				for(i=[-1,1]) translate([25*i,27.5,0]) circle(r=5);
 			}
+			translate([0,-40,1]) cube([60,40,2],center=true);
 			translate([0,0,9.5]) difference()
 			{
 				import("screw_thread.stl",convexity=3);
@@ -94,6 +105,8 @@ module knob_delay_case(height=14)
 		}
 		translate([0,0,1]) cylinder(r=25.5,h=height);
 		cylinder(r=23.5,h=5,center=true);
+		translate([0,-45,0]) cylinder(r=7,h=6,center=true);
+		translate([17,-29.445,0]) cylinder(r=2.25,h=6,center=true);
 	}
 }
 
@@ -101,16 +114,88 @@ module knob_delay_case_cap()
 {
 	difference()
 	{
-		cylinder(r=29,h=7.5);
+		cylinder(r=29,h=6);
 		import("screw_thread.stl",convexity=3);
 		cylinder(r=27.5,h=25,center=true);
 	}
-	translate([0,0,6.5]) difference()
+	translate([0,0,5]) difference()
 	{
 		cylinder(r=29,h=1);
 		cylinder(r=22.5,h=3,center=true);
 	}
 }
+
+module gear1()
+{
+	difference()
+	{
+		union()
+		{
+			gear(24,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
+			translate([0,0,3]) cylinder(r=23,h=1);
+		}
+		cylinder(r=16.5,h=10,center=true);
+		for(i=[1,3,5,7]) rotate([0,0,i*45]) translate([20,0,0]) cylinder(r=1,h=10,center=true);
+	}
+}
+
+module gear2()
+{
+	gear(10,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
+	difference()
+	{
+		union(){ cylinder(r=2,h=5); cylinder(r=4,h=3); }
+		cylinder(r=1.1,h=15,center=true);
+		translate([0,0,0]) cylinder(r=3,h=4,center=true);
+	}
+}
+
+module gear3()
+{
+	difference()
+	{
+		gear(13,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
+		cylinder(r=5,h=10,$fn=6,center=true);
+	}
+}
+
+module worm_spur()
+{	
+	gear(10,gear_cp,rim_thickness=10,pressure_angle=20,clearance=0,backlash=0.1,twist=-2);
+	cylinder(r=6.5,h=4,center=true);
+	cylinder(r=5,h=10,$fn=6,center=true);
+}
+
+module motor_worm()
+{
+	difference()
+	{
+		union()
+		{
+			translate([0,0,0.8]) worm_gear(20,2*3.1415,5,stepsPerTurn=15);
+			cylinder(r=5,h=1,$fn=100);
+		}
+		cylinder(r=1,h=70,center=true,$fn=100);
+	}
+}
+
+//translate([0,30,7.5]) rotate([0,180,0]) // for printing cap
+
+// exploded view because it is pretty
+
+translate([0,0,55]) knob_delay_case_cap();
+% translate([0,0,3.05]) knob_delay_case();
+translate([0,0,33]) difference(){ knob_hub(height=10); cube([0.5,100,50],center=true); }
+translate([0,0,45]) knob_wheel();
+translate([0,0,27]) knob_delay();
+translate([0,0,20]) knob_final();
+gear1();
+rotate([0,0,30]) translate([0,-34,0]) gear2();
+translate([0,-45,0]) rotate([0,0,10.5]) gear3();
+translate([0,-45,5]){ worm_spur(); translate([15,-10,7.5]) rotate([-90,0,0]) motor_worm(); }
+
+
+//door_cap_frame();
 
 * translate([0,-8,2.5]) difference()
 {
@@ -124,35 +209,3 @@ module knob_delay_case_cap()
 	translate([0,8,0]) cylinder(r=10,h=20,center=true);
 	translate([0,-11,0]) cube([20,40,10],center=true);
 }
-rotate([0,0,60]) translate([-33,0,-1.5])
-{
-	gear(6,10,4,0);
-	cylinder(r=6,h=5);
-}
-% translate([0,0,-1.6]) difference()
-{
-	union()
-	{
-		gear(6,24,3,3);
-		translate([0,0,2]) cylinder(r=23,h=1,center=true);
-	}
-	cylinder(r=16.5,h=10,center=true);
-	for(i=[1,3,5,7]) rotate([0,0,i*45]) translate([20,0,0]) cylinder(r=1,h=10,center=true);
-}
-
-* translate([0,0,-10]) difference()
-{
-	cylinder(r=25,h=2.5);
-	cylinder(r=16.5,h=10,center=true);
-	translate([0,21.5,0]) cylinder(r=1.5,h=6,center=true);
-	for(i=[1,3,5,7]) rotate([0,0,i*45]) translate([20,0,0]) cylinder(r=1,h=10,center=true);
-}
-
-//door_cap_frame();
-knob_delay_case();
-//translate([0,30,7.5]) rotate([0,180,0]) knob_delay_case_cap();
-
-//knob_wheel();
-//knob_delay();
-
-//difference(){ knob_hub(height=10); cube([0.5,100,50],center=true); }
