@@ -1,4 +1,4 @@
-$fn=100;
+$fn=50;
 
 // takes forever to render so I replaced them with the rendered STLs
 //use <screw_thread.scad>
@@ -6,8 +6,6 @@ use <involute_gears.scad>
 use <worm_gear.scad>
 
 gear_cp = 360;
-
-use <servo.scad>
 
 module door_cap_frame(padding=5)
 {
@@ -105,8 +103,7 @@ module knob_delay_case(height=14)
 		}
 		translate([0,0,1]) cylinder(r=25.5,h=height);
 		cylinder(r=23.5,h=5,center=true);
-		translate([0,-45,0]) cylinder(r=7,h=6,center=true);
-		translate([17,-29.445,0]) cylinder(r=2.25,h=6,center=true);
+		translate([0,-42,0]) cylinder(r=7,h=6,center=true);
 	}
 }
 
@@ -141,20 +138,9 @@ module gear1()
 
 module gear2()
 {
-	gear(10,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
 	difference()
 	{
-		union(){ cylinder(r=2,h=5); cylinder(r=4,h=3); }
-		cylinder(r=1.1,h=15,center=true);
-		translate([0,0,0]) cylinder(r=3,h=4,center=true);
-	}
-}
-
-module gear3()
-{
-	difference()
-	{
-		gear(13,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
+		gear(18,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
 		cylinder(r=5,h=10,$fn=6,center=true);
 	}
 }
@@ -183,16 +169,15 @@ module motor_worm()
 
 // exploded view because it is pretty
 
-translate([0,0,55]) knob_delay_case_cap();
+translate([0,0,52]) knob_delay_case_cap();
 % translate([0,0,3.05]) knob_delay_case();
 translate([0,0,33]) difference(){ knob_hub(height=10); cube([0.5,100,50],center=true); }
 translate([0,0,45]) knob_wheel();
-translate([0,0,27]) knob_delay();
+translate([0,0,26]) knob_delay();
 translate([0,0,20]) knob_final();
 gear1();
-rotate([0,0,30]) translate([0,-34,0]) gear2();
-translate([0,-45,0]) rotate([0,0,10.5]) gear3();
-translate([0,-45,5]){ worm_spur(); translate([15,-10,7.5]) rotate([-90,0,0]) motor_worm(); }
+translate([0,-42,0]) gear2();
+translate([0,-42,5]){ worm_spur(); translate([15,-10,7.5]) rotate([-90,0,0]) motor_worm(); }
 
 
 //door_cap_frame();
