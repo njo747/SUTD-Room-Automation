@@ -2,7 +2,7 @@ $fn=50;
 
 // takes forever to render so I replaced them with the rendered STLs
 //use <screw_thread.scad>
-use <involute_gears.scad>
+use <../MCAD/involute_gears.scad>
 use <worm_gear.scad>
 
 gear_cp = 360;
