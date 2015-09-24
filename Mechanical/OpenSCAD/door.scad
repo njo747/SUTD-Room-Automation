@@ -7,6 +7,8 @@ use <worm_gear.scad>
 
 gear_cp = 360;
 
+module sgear(num_teeth,thickness=3) gear(num_teeth,gear_cp,gear_thickness=thickness,rim_thickness=thickness,hub_thickness=0);
+
 module quadring() for(i=[1,3,5,7]) rotate([0,0,i*45]) children();
 
 module door_cap_frame(padding=5)
@@ -130,7 +132,7 @@ module gear1(thickness=3)
 	{
 		union()
 		{
-			gear(24,gear_cp,gear_thickness=thickness,rim_thickness=thickness,hub_thickness=0);
+			sgear(24,thickness);
 			translate([0,0,thickness]) cylinder(r=23,h=1);
 		}
 		cylinder(r=16.5,h=thickness*3,center=true);
@@ -142,7 +144,7 @@ module gear2(thickness=3)
 {
 	difference()
 	{
-		gear(18,gear_cp,gear_thickness=thickness,rim_thickness=thickness,hub_thickness=0);
+		sgear(18,thickness);
 		cylinder(r=5,h=thickness*3,$fn=6,center=true);
 	}
 }
