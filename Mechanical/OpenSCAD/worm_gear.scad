@@ -1,4 +1,4 @@
-use <involute_gears.scad>
+use <../MCAD/involute_gears.scad>
 
 function unitVector(v) = v/sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
 function barycenter(v1,v2,r) = (v1*r+v2*(1-r));
