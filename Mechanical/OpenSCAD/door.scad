@@ -7,6 +7,8 @@ use <worm_gear.scad>
 
 gear_cp = 360;
 
+module quadring() for(i=[1,3,5,7]) rotate([0,0,i*45]) children();
+
 module door_cap_frame(padding=5)
 {
 	cap_r = 27.5; // radius of cap
@@ -82,7 +84,7 @@ module knob_final()
 	}
 }
 
-module knob_delay_case(height=14)
+module knob_delay_case(height=16)
 {
 	difference()
 	{
@@ -95,53 +97,53 @@ module knob_delay_case(height=14)
 				for(i=[-1,1]) translate([25*i,27.5,0]) circle(r=5);
 			}
 			translate([0,-40,1]) cube([60,40,2],center=true);
-			translate([0,0,9.5]) difference()
-			{
-				import("screw_thread.stl",convexity=3);
-				translate([0,0,4.55]) cylinder(r=30,h=5);
-			}
+			quadring() translate([29,0,0]) cylinder(r=4.5,h=height);
 		}
 		translate([0,0,1]) cylinder(r=25.5,h=height);
 		cylinder(r=23.5,h=5,center=true);
 		translate([0,-42,0]) cylinder(r=7,h=6,center=true);
+		quadring() translate([0,29,0])
+		{
+			cylinder(r=1.5,h=height*3,center=true);
+			cylinder(r=3.5,h=height*2-5,$fn=6,center=true);
+		}
 	}
 }
 
 module knob_delay_case_cap()
 {
-	difference()
+	linear_extrude(1) difference()
 	{
-		cylinder(r=29,h=6);
-		import("screw_thread.stl",convexity=3);
-		cylinder(r=27.5,h=25,center=true);
-	}
-	translate([0,0,5]) difference()
-	{
-		cylinder(r=29,h=1);
-		cylinder(r=22.5,h=3,center=true);
+		union()
+		{
+			circle(r=28);
+			quadring() translate([29,0,0]) circle(r=4.5);
+		}
+		circle(r=22.5);
+		quadring() translate([0,29,0]) circle(r=1.5);
 	}
 }
 
-module gear1()
+module gear1(thickness=3)
 {
 	difference()
 	{
 		union()
 		{
-			gear(24,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
-			translate([0,0,3]) cylinder(r=23,h=1);
+			gear(24,gear_cp,gear_thickness=thickness,rim_thickness=thickness,hub_thickness=0);
+			translate([0,0,thickness]) cylinder(r=23,h=1);
 		}
-		cylinder(r=16.5,h=10,center=true);
-		for(i=[1,3,5,7]) rotate([0,0,i*45]) translate([20,0,0]) cylinder(r=1,h=10,center=true);
+		cylinder(r=16.5,h=thickness*3,center=true);
+		quadring() translate([20,0,0]) cylinder(r=1,h=thickness*3,center=true);
 	}
 }
 
-module gear2()
+module gear2(thickness=3)
 {
 	difference()
 	{
-		gear(18,gear_cp,gear_thickness=3,rim_thickness=3,hub_thickness=0);
-		cylinder(r=5,h=10,$fn=6,center=true);
+		gear(18,gear_cp,gear_thickness=thickness,rim_thickness=thickness,hub_thickness=0);
+		cylinder(r=5,h=thickness*3,$fn=6,center=true);
 	}
 }
 
@@ -168,7 +170,7 @@ module motor_worm()
 //translate([0,30,7.5]) rotate([0,180,0]) // for printing cap
 
 // exploded view because it is pretty
-
+/*
 translate([0,0,52]) knob_delay_case_cap();
 % translate([0,0,3.05]) knob_delay_case();
 translate([0,0,33]) difference(){ knob_hub(height=10); cube([0.5,100,50],center=true); }
@@ -178,7 +180,10 @@ translate([0,0,20]) knob_final();
 gear1();
 translate([0,-42,0]) gear2();
 translate([0,-42,5]){ worm_spur(); translate([15,-10,7.5]) rotate([-90,0,0]) motor_worm(); }
+*/
 
+knob_delay_case();
+gear2();
 
 //door_cap_frame();
 
