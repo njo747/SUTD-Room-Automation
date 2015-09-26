@@ -1,7 +1,7 @@
 use <../MCAD/involute_gears.scad>
 
-function unitVector(v) = v/sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
-function barycenter(v1,v2,r) = (v1*r+v2*(1-r));
+function unit(v) = v/norm(v);
+function barycenter(v1,v2,r) = v1*r+v2*(1-r);
 
 module slice(i,stepsPerTurn,minorRadius,pitch,ThreadDepth,ThreadRatio=0.5,ThreadPosition=0.5,ThreadAngle=20)
 {
@@ -11,10 +11,10 @@ module slice(i,stepsPerTurn,minorRadius,pitch,ThreadDepth,ThreadRatio=0.5,Thread
 		
 	ABot = V(i); ATop = V(i+stepsPerTurn); BBot = V(i+1); BTop = V(i+1+stepsPerTurn);
 
-	uva  = unitVector(ATop-ABot)*ThreadDepth/2*tan(ThreadAngle);
-	uvb  = unitVector(BTop-BBot)*ThreadDepth/2*tan(ThreadAngle);
-	uvat = unitVector(XY(i+stepsPerTurn))*ThreadDepth;
-	uvbt = unitVector(XY(i+1+stepsPerTurn))*ThreadDepth;
+	uva  = unit(ATop-ABot)*ThreadDepth/2*tan(ThreadAngle);
+	uvb  = unit(BTop-BBot)*ThreadDepth/2*tan(ThreadAngle);
+	uvat = unit(XY(i+stepsPerTurn))*ThreadDepth;
+	uvbt = unit(XY(i+1+stepsPerTurn))*ThreadDepth;
 
 	tptr = ThreadPosition+ThreadRatio/2; tmtr = ThreadPosition-ThreadRatio/2;
 	
